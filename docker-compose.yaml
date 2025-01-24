@@ -1,0 +1,21 @@
+services:
+  ais-decoder:
+    image: yesubzero/magi-ais-decoder:latest
+    container_name: ais-decoder 
+    ports:
+      - "10110:10110/udp" # UDP Port
+    depends_on: 
+      - ais-catcher
+    restart: always
+
+  ais-catcher:
+    image: ghcr.io/jvde-github/ais-catcher:latest
+    container_name: ais-catcher
+    ports:
+      - "8100:8100" # HTTP Server para monitoreo real-time
+      - "6300:6300" # UDP Server MarineTraffic
+      - "10110:10110" # UDP MAGI-System airES Research Group
+    devices:
+      -  "/dev/bus/usb:/dev/bus/usb"
+    command: ["-N", "8100", "-u", "5.9.207.224", "6300", "-o", "5", "-u", "100.105.210.120", "10110", "-X", "c2c8609e-878d-4a9d-9427-8924dd4e618c"]
+    restart: always
